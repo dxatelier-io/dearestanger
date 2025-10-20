@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // you can customize username/password here
     const correctUser = "delta";
-    const correctPass = "studio";
+    const correctPass = "hellostranger";
 
     if (user === correctUser && pass === correctPass) {
       // play unlock animation
