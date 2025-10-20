@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dear Stranger — ∆ Studio</title>
+  <link rel="stylesheet" href="style/main.css" />
+
+  <!-- Optional: Playfair + Inter (hybrid) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Page-specific styles for dearstranger (kepsentuhan premium) */
+    :root{
+      --panel-w: min(880px, 88%);
+      --panel-h: min(560px, 86vh);
+      --accent-rose: linear-gradient(90deg,#d98fa6,#9b7bbf);
+      --muted-2: rgba(255,255,255,0.88);
+    }
+
+    /* center inside the mac frame */
+    .frame { display:flex; align-items:center; justify-content:center; }
+    .finder-window {
+      width:var(--panel-w);
+      height:var(--panel-h);
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(10,10,12,0.56), rgba(6,6,8,0.42));
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px) saturate(1.04);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transform-origin:center;
+      animation: windowIn 420ms cubic-bezier(.2,.9,.24,1);
+    }
+
+    @keyframes windowIn {
+      from { transform: translateY(18px) scale(0.995); opacity:0; filter:blur(6px); }
+      to   { transform: translateY(0) scale(1); opacity:1; filter:blur(0); }
+    }
+
+    /* window top bar (mac style) */
+    .win-top {
+      height:46px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:10px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.02);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.06));
+    }
+    .circles { display:flex; gap:8px; align-items:center; }
+    .circle { width:12px; height:12px; border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,0.5); }
+    .close { background: #ff6b6b; }
+    .min { background:#f7c84b; }
+    .max { background:#2ecc71; }
+
+    .win-title { margin-left:6px; color:var(--muted-2); font-weight:600; font-family: 'Playfair Display', serif; letter-spacing:0.2px; }
+
+    /* content area */
+    .win-body{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:36px;
+      box-sizing:border-box;
+    }
+
+    .prolog-card{
+      width:100%;
+      max-width:720px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18));
+      border-radius:12px;
+      padding:34px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.03);
+      color:var(--muted-2);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center;
+      text-align:center;
+      line-height:1.6;
+    }
+
+    .title{
+      font-family: 'Playfair Display', serif;
+      font-size:34px;
+      margin:0;
+      color: #fff;
+      letter-spacing:0.6px;
+    }
+    .subtitle{
+      font-family: 'Inter', system-ui, sans-serif;
+      margin-top:-6px;
+      color: rgba(255,255,255,0.78);
+      font-size:13px;
+      font-weight:500;
+      text-transform:lowercase;
+      opacity:0.95;
+    }
+
+    .prolog-text{
+      max-width:68ch;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: rgba(255,255,255,0.92);
+      font-size:16px;
+      margin-top:6px;
+    }
+
+    /* actions row */
+    .actions{
+      display:flex;
+      gap:12px;
+      margin-top:6px;
+      align-items:center;
+    }
+    .action-btn{
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      color:var(--muted-2);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .action-btn:active{ transform: translateY(2px); }
+
+    .accent{
+      background:var(--accent-rose);
+      color:white;
+      border: none;
+      padding:10px 16px;
+      box-shadow: 0 8px 26px rgba(155,123,191,0.12);
+      background-clip: padding-box;
+    }
+
+    /* heart button */
+    .heart {
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      border:1px solid rgba(255,255,255,0.03);
+      cursor:pointer;
+      transition: transform 140ms ease;
+    }
+    .heart .icon { font-size:16px; color:#ffb3c2; transform-origin:center; transition: transform 220ms cubic-bezier(.2,.9,.24,1); }
+    .heart.pulse .icon { transform: scale(1.22); filter: drop-shadow(0 6px 18px rgba(203,96,136,0.18)); }
+
+    .count { font-weight:700; color:rgba(255,255,255,0.95); font-size:14px; }
+
+    /* small controls bottom-right */
+    .mini-controls{
+      position:absolute;
+      right:18px;
+      bottom:18px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      z-index:50;
+    }
+    .mini-toggle{
+      width:44px; height:44px; border-radius:10px;
+      display:inline-grid; place-items:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      border:1px solid rgba(255,255,255,0.03);
+      cursor:pointer;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:720px){
+      .title{ font-size:26px; }
+      .prolog-card { padding:20px; }
+      .win-top { padding:8px 12px; }
+      :root{ --panel-h: 72vh; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="finder-window" role="dialog" aria-labelledby="title">
+      <!-- top bar -->
+      <div class="win-top" aria-hidden="true">
+        <div class="circles">
+          <div class="circle close" title="Close"></div>
+          <div class="circle min" title="Minimize"></div>
+          <div class="circle max" title="Maximize"></div>
+        </div>
+        <div class="win-title" id="title">Dear Stranger — Prolog</div>
+      </div>
+
+      <!-- main content -->
+      <div class="win-body">
+        <section class="prolog-card" id="prologCard">
+          <h1 class="title">Prologue</h1>
+          <div class="subtitle">from “Dear Stranger”</div>
+
+          <div class="prolog-text" id="prologText" contenteditable="true" aria-label="Prolog content">
+            <!-- placeholder prolog (editable) -->
+            I can’t recall the first moment i started noticing her,
+maybe it was the way she laughed,
+or how her calmness made the world feel less loud.
+
+She never tried to be the center of attention,
+and yet somehow,
+she became the quiet center of mine.
+
+She’s close enough for my heart to know her rhythm,
+but far enough to remind me
+that not everything beautiful is meant to be held.--
+
+Still, i’m happy.
+Happy that  get to love her
+in silence, in small, invisible ways
+that only my heart understands.
+
+So, hello, stranger :)
+the girl who doesn’t know
+how softly she changed the meaning of my days.
+          </div>
+
+          <div class="actions" role="toolbar" aria-label="Actions">
+            <button class="heart" id="heartBtn" aria-pressed="false" title="Like this page">
+              <span class="icon">❤</span>
+              <span class="count" id="heartCount">0</span>
+            </button>
+
+            <button class="action-btn" id="saveBtn" title="Save this page as image">📸 Save Page</button>
+
+            <button class="action-btn accent" id="nextBtn" title="Next page">➡️ Next</button>
+          </div>
+
+          <div style="font-size:12px;color:rgba(255,255,255,0.58);margin-top:6px">
+            Tip: tap the text to edit the prolog. Your edits will not be sent anywhere — they stay on the page for preview.
+          </div>
+        </section>
+      </div>
+
+      <!-- small controls -->
+      <div class="mini-controls" aria-hidden="false">
+        <button class="mini-toggle" id="musicToggle" title="Toggle ambient music">♪</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WebAudio ambient (simple drone) -->
+  <script>
+    // HEART COUNTER (localStorage)
+    (function(){
+      const key = 'dearstranger:heart';
+      const btn = document.getElementById('heartBtn');
+      const countEl = document.getElementById('heartCount');
+
+      function getCount(){ return parseInt(localStorage.getItem(key) || '0', 10); }
+      function setCount(n){ localStorage.setItem(key, String(n)); countEl.textContent = n; }
+
+      // init
+      setCount(getCount());
+
+      btn.addEventListener('click', () => {
+        const cur = getCount();
+        const next = cur + 1;
+        setCount(next);
+        // small pulse
+        btn.classList.add('pulse');
+        btn.setAttribute('aria-pressed','true');
+        setTimeout(()=> btn.classList.remove('pulse'), 420);
+      });
+    })();
+
+    // SAVE AS IMAGE (SVG foreignObject -> canvas -> PNG)
+    (function(){
+      const saveBtn = document.getElementById('saveBtn');
+      const target = document.getElementById('prologCard');
+
+      function inlineStyles(node) {
+        // recursively copy computed styles as inline style for portability in foreignObject
+        const win = document.defaultView;
+        const cs = win.getComputedStyle(node);
+        let styleStr = '';
+        for (let i = 0; i < cs.length; i++) {
+          const prop = cs[i];
+          styleStr += `${prop}:${cs.getPropertyValue(prop)};`;
+        }
+        node.setAttribute('style', styleStr);
+        for (let child of Array.from(node.children)) inlineStyles(child);
+      }
+
+      saveBtn.addEventListener('click', async () => {
+        // clone node
+        const clone = target.cloneNode(true);
+        // make sure fonts render by setting background and sizes explicitly
+        clone.style.width = getComputedStyle(target).width;
+        clone.style.height = getComputedStyle(target).height;
+        // inline computed styles
+        inlineStyles(clone);
+
+        // create svg with foreignObject
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, 'svg');
+        const width = Math.ceil(target.offsetWidth * 2); // 2x for HD
+        const height = Math.ceil(target.offsetHeight * 2);
+        svg.setAttribute('xmlns', svgNS);
+        svg.setAttribute('width', width);
+        svg.setAttribute('height', height);
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+        const foreignObject = document.createElementNS(svgNS, 'foreignObject');
+        foreignObject.setAttribute('width', '100%');
+        foreignObject.setAttribute('height', '100%');
+
+        // scale the clone for HD export
+        clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+        clone.style.transform = `scale(${2})`;
+        clone.style.transformOrigin = 'top left';
+        clone.style.width = target.offsetWidth + 'px';
+        clone.style.height = target.offsetHeight + 'px';
+
+        foreignObject.appendChild(clone);
+        svg.appendChild(foreignObject);
+
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+        const url = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            // optional: add a subtle background
+            ctx.fillStyle = '#07070b';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              const a = document.createElement('a');
+              a.href = URL.createObjectURL(blob);
+              a.download = 'Dear-Stranger-Prolog.png';
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              URL.revokeObjectURL(url);
+            }, 'image/png', 0.95);
+          } catch (err){
+            alert('Save failed — your browser may restrict canvas operations on this page.');
+            console.error(err);
+          }
+        };
+        img.onerror = (e) => {
+          alert('Failed to render image. Try again or use a desktop browser.');
+          URL.revokeObjectURL(url);
+        };
+        img.src = url;
+      });
+    })();
+
+    // PAGE TRANSITION (Next)
+    (function(){
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.addEventListener('click', () => {
+        // exit animation
+        const win = document.querySelector('.finder-window');
+        win.style.transition = 'transform 420ms ease, opacity 420ms ease';
+        win.style.transform = 'translateY(-8%) scale(0.994)';
+        win.style.opacity = '0';
+        setTimeout(() => {
+          // navigate to next page (you can create dearstranger-2.html later)
+          window.location.href = 'dearstranger-2.html';
+        }, 420);
+      });
+    })();
+
+    // SIMPLE AMBIENT MUSIC USING WEBAUDIO (manual toggle)
+    (function(){
+      let audioCtx = null;
+      let osc1 = null;
+      let gain = null;
+      const toggle = document.getElementById('musicToggle');
+      let playing = false;
+
+      function startAudio(){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        osc1 = audioCtx.createOscillator();
+        gain = audioCtx.createGain();
+        // gentle detuned triangle-ish
+        osc1.type = 'sine';
+        osc1.frequency.value = 220;
+        const lfo = audioCtx.createOscillator();
+        const lfoGain = audioCtx.createGain();
+        lfo.frequency.value = 0.12;
+        lfoGain.gain.value = 12;
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc1.frequency);
+        // output
+        gain.gain.value = 0.0001; // start near silent
+        osc1.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc1.start();
+        lfo.start();
+        // swell in
+        gain.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 1.2);
+        playing = true;
+        toggle.style.background = 'linear-gradient(90deg,#9b7bbf,#d98fa6)';
+        toggle.style.color = '#111';
+      }
+
+      function stopAudio(){
+        if (!audioCtx) return;
+        try {
+          gain.gain.linearRampToValueAtTime(0.00001, audioCtx.currentTime + 0.6);
+          setTimeout(()=> {
+            osc1.stop();
+            audioCtx.close();
+            audioCtx = null;
+            playing = false;
+            toggle.style.background = '';
+            toggle.style.color = '';
+          }, 700);
+        } catch(e){
+          console.warn(e);
+          audioCtx = null; playing = false;
+        }
+      }
+
+      toggle.addEventListener('click', () => {
+        if (!playing) startAudio();
+        else stopAudio();
+      });
+    })();
+  </script>
+</body>
+</html>
