@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>∆ Studio — Lock Screen</title>
+
+  <!-- link ke stylesheet utama (buat file style/main.css terpisah) -->
+  <link rel="stylesheet" href="style/main.css" />
+</head>
+<body>
+  <div class="frame">
+    <!-- LOCK SCREEN -->
+    <div id="lock-screen" class="screen lock active" aria-label="Lock screen">
+      <div class="wallpaper" aria-hidden="true"></div>
+
+      <!-- subtle glass overlay -->
+      <div class="glass" aria-hidden="true"></div>
+
+      <div class="lock-content" role="region" aria-label="Unlock area">
+        <div class="time" id="time">--:--</div>
+        <div class="date" id="date">Loading...</div>
+
+        <button id="unlock-hint" class="unlock-hint" aria-label="Click to show login">
+          Click to Unlock
+        </button>
+      </div>
+
+      <!-- faux login form (semu) -->
+      <form id="login" class="login hidden" autocomplete="off" aria-hidden="true">
+        <div class="login-box" role="dialog" aria-label="Login dialog">
+          <h3>Sign in to ∆ Studio</h3>
+
+          <!-- preset username to make it feel Mac-like -->
+          <input id="username" name="username" placeholder="username" value="Delta" aria-label="username" />
+          <input id="password" name="password" type="password" placeholder="password" aria-label="password" />
+
+          <div class="login-actions">
+            <button type="submit" class="btn">Unlock</button>
+            <button type="button" id="cancel-login" class="btn ghost">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div id="desktop-screen" class="screen desktop" aria-hidden="true">
+      <div class="wallpaper"></div>
+
+      <div class="desktop-content" aria-hidden="true">
+        <div class="icons" role="list">
+          <div class="icon folder" data-target="dearstranger.html" tabindex="0" role="listitem" aria-label="Folder Dear Stranger">
+       
+            <svg viewBox="0 0 24 24" class="icon-img" aria-hidden="true">
+              <path d="M6 2h7l3 3v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/>
+            </svg>
+            <div class="icon-label">Dear Stranger</div>
+          </div>
+        </div>
+
+ 
+        <div class="dock" aria-hidden="true">
+          <div class="dock-inner">
+            <button class="dock-item" title="Notes" aria-label="Notes">Notes</button>
+            <button class="dock-item" title="Spotify" aria-label="Spotify">Spotify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- script utama (buat file script/main.js terpisah) -->
+  <script src="script/main.js"></script>
+</body>
+</html>
