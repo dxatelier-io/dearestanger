@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>∆ Studio — Desktop</title>
+  <link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+  <div class="frame">
+    <div class="screen desktop active">
+      <!-- Wallpaper -->
+      <div class="wallpaper"></div>
+      <div class="glass"></div>
+
+      <!-- Menu Bar -->
+      <div class="menu-bar">
+        <div class="menu-left">
+          <span class="menu-item"></span>
+          <span class="menu-item">Finder</span>
+          <span class="menu-item">File</span>
+          <span class="menu-item">Edit</span>
+          <span class="menu-item">View</span>
+        </div>
+        <div class="menu-right">
+          <div class="indicators">
+            <span>🔊</span>
+            <span>🔋</span>
+            <span id="menu-time"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop Content -->
+      <div class="desktop-content">
+        <!-- Folder Icons -->
+        <div class="icons">
+          <div class="icon" tabindex="0" onclick="openFolder('dearstranger.html')">
+            <svg class="icon-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M10 4h9a2 2 0 0 1 2 2v2H10V4zM4 8h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/>
+            </svg>
+            <div class="icon-label">Dear Stranger</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dock -->
+      <div class="dock">
+        <div class="dock-inner">
+          <button class="dock-item">Finder</button>
+          <button class="dock-item">Safari</button>
+          <button class="dock-item">Trash</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Desktop clock (top-right)
+    const menuTime = document.getElementById("menu-time");
+    function updateMenuClock() {
+      const now = new Date();
+      menuTime.textContent = now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+    updateMenuClock();
+    setInterval(updateMenuClock, 1000);
+
+    // Open folder (navigate)
+    function openFolder(link) {
+      window.location.href = link;
+    }
+  </script>
+</body>
+</html>
